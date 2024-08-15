@@ -54,7 +54,7 @@ procedure TfrmMain.btnSendClick(Sender: TObject);
 var
   LResult: ISMSResult;
 begin
-  FSMSClient.URL := eURL.Text;
+  FSMSClient.BaseURL := eURL.Text;
   FSMSClient.UserID := eUserID.Text;
   FSMSClient.Password := ePassword.Text;
   LResult := FSMSClient.Send(eNumbers.Text, eMessage.Text);
