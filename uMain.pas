@@ -48,7 +48,7 @@ implementation
 
 {$R *.dfm}
 
-{ TForm9 }
+{ TfrmMain }
 
 procedure TfrmMain.btnSendClick(Sender: TObject);
 var
@@ -81,7 +81,7 @@ procedure TfrmMain.LoadFromFile;
 begin
   with TIniFile.Create(ChangeFileExt(ParamStr(0), '.ini')) do
   begin
-    eURL.Text := ReadString('SERVER', 'URL', '192.168.0.100:8080');
+    eURL.Text := ReadString('SERVER', 'URL', 'http://192.168.0.100:8080');
     eUserID.Text := ReadString('SERVER', 'USERID', '');
     ePassword.Text := ReadString('SERVER', 'PASSWORD', '');
 
