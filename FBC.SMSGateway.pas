@@ -2,6 +2,7 @@ unit FBC.SMSGateway;
 
 interface
 
+{$REGION 'USES'}
 uses
   System.SysUtils,
   System.Classes,
@@ -9,6 +10,7 @@ uses
   System.NetEncoding,
 
   FBC.Json;
+{$ENDREGION}
 
 type
   ISMSResult = interface
@@ -38,9 +40,9 @@ type
 
   TSMSClient = class
   private
+    FBaseURL: string;
     FHttpClient: THttpClient;
     FPassword: string;
-    FURL: string;
     FUserID: string;
 
     procedure CheckHttpClient;
@@ -57,14 +59,14 @@ type
     function Logs: ISMSResult;
     function Send(const ANumbers, AMessage: string): ISMSResult;
 
+    property BaseURL: string read FBaseURL write FBaseURL;
     property Password: string read FPassword write FPassword;
     property UserID: string read FUserID write FUserID;
-    property URL: string read FURL write FURL;
   end;
 
 implementation
 
-{ TSMSResult }
+{$REGION 'TSMSResult'}
 
 constructor TSMSResult.Create(AResponse: IHttpResponse);
 begin
@@ -91,13 +93,15 @@ begin
   Result := FData;
 end;
 
-{ TSMSClient }
+{$ENDREGION}
+
+{$REGION 'TSMSClient'}
 
 constructor TSMSClient.Create;
 begin
+  FBaseURL := 'http://127.0.0.1:8080';
   FPassword := '';
   FUserID := '';
-  FURL := '127.0.0.1:8080';
 end;
 
 destructor TSMSClient.Destroy;
@@ -150,7 +154,7 @@ end;
 function TSMSClient.HttpGet(const AResourceID: string): ISMSResult;
 begin
   CheckHttpClient;
-  Result := TSMSResult.Create(FHttpClient.Get(FURL + AResourceID));
+  Result := TSMSResult.Create(FHttpClient.Get(FBaseURL + AResourceID));
 end;
 
 function TSMSClient.HttpPost(const AResourceID, AData: string): ISMSResult;
@@ -160,7 +164,7 @@ begin
   LStream := TStringStream.Create(AData, TEncoding.UTF8);
   try
     CheckHttpClient;
-    Result := TSMSResult.Create(FHttpClient.Post(FURL + AResourceID, LStream));
+    Result := TSMSResult.Create(FHttpClient.Post(FBaseURL + AResourceID, LStream));
   finally
     LStream.Free;
   end;
@@ -191,5 +195,7 @@ begin
     LData.Free;
   end;
 end;
+
+{$ENDREGION}
 
 end.
